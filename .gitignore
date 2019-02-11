@@ -1,0 +1,7 @@
+# Atom editor
+.vscode
+
+# built files
+*.o
+*.elf
+*.hex
