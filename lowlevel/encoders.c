@@ -29,6 +29,8 @@ void encoders_setup() {
   timer_ic_set_input(TIM2, TIM_IC2, TIM_IC_IN_TI1);
   timer_ic_set_input(TIM2, TIM_IC1, TIM_IC_IN_TI2);
   timer_enable_counter(TIM2);
+
+  encoders_reset_tics();
 }
 
 void encoders_reset_tics() {
