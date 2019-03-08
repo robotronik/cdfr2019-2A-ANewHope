@@ -15,13 +15,6 @@ bool about_da_power();
 void set_all_1();
 
 /*****************************************************************************/
-// SPI-connected EEPROM chip
-void eeprom_setup();
-// TODO
-void* eeprom_read();
-void eeprom_write(void* data);
-
-/*****************************************************************************/
 void can_setup();
 // TODO !
 void* can_get_message();
