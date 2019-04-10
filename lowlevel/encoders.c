@@ -1,47 +1,52 @@
-#include "theyseemerolling.h"
+#include "encoders.h"
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
+void encoder_left_setup(void)
+{
+  rcc_periph_clock_enable(ENCODER_L_RCC_TIM);
+  timer_set_period(ENCODER_L_TIM, ENCODER_PERIOD);
+  timer_slave_set_mode(ENCODER_L_TIM, 0x3); // encoder
+  timer_ic_set_input(ENCODER_L_TIM, TIM_IC1, TIM_IC_IN_TI1);
+  timer_ic_set_input(ENCODER_L_TIM, TIM_IC2, TIM_IC_IN_TI2);
+  timer_direction_down(ENCODER_L_TIM);
+  timer_enable_counter(ENCODER_L_TIM);
 
+	rcc_periph_clock_enable(ENCODER_L_CH1_PORT_RCC);
+	gpio_mode_setup(ENCODER_L_CH1_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_L_CH1_PIN);
+	gpio_set_af(ENCODER_L_CH1_PORT, ENCODER_L_CH1_AF, ENCODER_L_CH1_PIN);
 
-void encoders_setup() {
-  rcc_periph_clock_enable(RCC_GPIOA);
-
-  // Encoder 1
-  rcc_periph_clock_enable(RCC_TIM1);
-  gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8 | GPIO9);
-  gpio_set_af(GPIOA, GPIO_AF6, GPIO8 | GPIO9);
-
-  timer_set_period(TIM1, 1024);
-  timer_slave_set_mode(TIM1, TIM_SMCR_SMS_EM3);
-  timer_ic_set_input(TIM1, TIM_IC1, TIM_IC_IN_TI1);
-  timer_ic_set_input(TIM1, TIM_IC2, TIM_IC_IN_TI2);
-  timer_enable_counter(TIM1);
-
-  // Encoder 2
-  rcc_periph_clock_enable(RCC_TIM2);
-  gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO1 | GPIO0);
-  gpio_set_af(GPIOA, GPIO_AF6, GPIO1 | GPIO0);
-
-  timer_set_period(TIM2, 1024);
-  timer_slave_set_mode(TIM2, TIM_SMCR_SMS_EM3);
-  timer_ic_set_input(TIM2, TIM_IC2, TIM_IC_IN_TI1);
-  timer_ic_set_input(TIM2, TIM_IC1, TIM_IC_IN_TI2);
-  timer_enable_counter(TIM2);
-
-  encoders_reset_tics();
+  rcc_periph_clock_enable(ENCODER_L_CH2_PORT_RCC);
+	gpio_mode_setup(ENCODER_L_CH2_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_L_CH2_PIN);
+	gpio_set_af(ENCODER_L_CH2_PORT, ENCODER_L_CH2_AF, ENCODER_L_CH2_PIN);
 }
 
-void encoders_reset_tics() {
-  timer_set_counter(TIM1, 0);
-  timer_set_counter(TIM2, 0);
+void encoder_right_setup(void)
+{
+  rcc_periph_clock_enable(ENCODER_R_RCC_TIM);
+  timer_set_period(ENCODER_R_TIM, ENCODER_PERIOD);
+  timer_slave_set_mode(ENCODER_R_TIM, 0x3); // encoder
+  timer_ic_set_input(ENCODER_R_TIM, TIM_IC1, TIM_IC_IN_TI1);
+  timer_ic_set_input(ENCODER_R_TIM, TIM_IC2, TIM_IC_IN_TI2);
+  timer_enable_counter(ENCODER_R_TIM);
+
+	rcc_periph_clock_enable(ENCODER_R_CH1_PORT_RCC);
+	gpio_mode_setup(ENCODER_R_CH1_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_R_CH1_PIN);
+	gpio_set_af(ENCODER_R_CH1_PORT, ENCODER_R_CH1_AF, ENCODER_R_CH1_PIN);
+
+  rcc_periph_clock_enable(ENCODER_R_CH2_PORT_RCC);
+	gpio_mode_setup(ENCODER_R_CH2_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_R_CH2_PIN);
+	gpio_set_af(ENCODER_R_CH2_PORT, ENCODER_R_CH2_AF, ENCODER_R_CH2_PIN);
 }
 
-int32_t encoder_1_get_tics() {
-  return timer_get_counter(TIM1);
+int encoder_left_get_counter(void)
+{
+  if(ENCODER_L_INVERSION)
+    return ENCODER_PERIOD-timer_get_counter(ENCODER_L_TIM);
+  return timer_get_counter(ENCODER_L_TIM);
 }
 
-int32_t encoder_2_get_tics() {
-  return timer_get_counter(TIM2);
+int encoder_right_get_counter(void)
+{
+  if(ENCODER_R_INVERSION)
+    return ENCODER_PERIOD-timer_get_counter(ENCODER_R_TIM);
+  return timer_get_counter(ENCODER_R_TIM);
 }
