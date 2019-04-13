@@ -11,18 +11,19 @@
 
 #define MICROS_SYSTICK_RATIO (1000000 / SYSTICK_FREQ_HZ)
 
-inline int32_t MILLIS_TO_SYSTICK(uint32_t ms) {
-    return ms * 1000 / MICROS_SYSTICK_RATIO;
-}
-inline int32_t MICROS_TO_SYSTICK(int32_t us) {
-    return us / MICROS_SYSTICK_RATIO;
-}
-inline int32_t SYSTICK_TO_MICROS(int32_t tick) {
-    return tick * MICROS_SYSTICK_RATIO;
-}
-inline int32_t SYSTICK_TO_MILLIS(int32_t tick) {
-    return tick * MICROS_SYSTICK_RATIO / 1000;
-}
+#define MILLIS_TO_SYSTICK(ms) ms * 1000 / MICROS_SYSTICK_RATIO
+// inline constexpr int32_t MILLIS_TO_SYSTICK(uint32_t ms) {
+//     return ms * 1000 / MICROS_SYSTICK_RATIO;
+// }
+// inline constexpr int32_t MICROS_TO_SYSTICK(int32_t us) {
+//     return us / MICROS_SYSTICK_RATIO;
+// }
+// inline constexpr int32_t SYSTICK_TO_MICROS(int32_t tick) {
+//     return tick * MICROS_SYSTICK_RATIO;
+// }
+// inline constexpr int32_t SYSTICK_TO_MILLIS(int32_t tick) {
+//     return tick * MICROS_SYSTICK_RATIO / 1000;
+// }
 
 // Granularité des PWM = prescaler = 100kHz = 10us
 #define PWM_GRANUL_FREQ_HZ  (       100000)
