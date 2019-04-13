@@ -6,6 +6,7 @@ Toolchain = arm-none-eabi-
 
 CC = $(Toolchain)gcc
 CXX= $(Toolchain)g++
+LD = $(Toolchain)ld
 ifeq (, $(shell which ccache))
 else
 	CC := ccache $(CC)
@@ -17,16 +18,17 @@ LFlags =
 
 # Generic flags
 CFlags += \
+	-Os \
 	-fdiagnostics-color=always \
 	-Wall \
 	-Wextra \
 	-g \
-	-Os \
-	-ffunction-sections \
-	-fdata-sections \
-	-fno-common \
-	-fno-exceptions \
-	--static
+
+	# -ffunction-sections \
+	# -fdata-sections \
+	# -fno-common \
+	# -fno-exceptions \
+	# --static
 
 LFlags += \
 	-Wl,--gc-sections \
@@ -44,13 +46,11 @@ LINKER_SCRIPTS_DIR = $(Makefile_path)/hal_common/linker_scripts
 CFlags += \
 	-mcpu=cortex-m4 \
 	-mthumb \
-	-mfloat-abi=hard -mfpu=fpv4-sp-d16
+	-mfloat-abi=hard \
+	-mfpu=fpv4-sp-d16 \
+	-specs=nano.specs
 
-LFlags += \
-	-T $(LINKER_SCRIPTS_DIR)/stm32f303.ld
-
-
-# Use LibOpenCm3
+	# Use LibOpenCm3
 LIBOPENCM3_DIR = $(Makefile_path)/hal_common/libopencm3
 CFlags += -I $(LIBOPENCM3_DIR)/include -DSTM32F3
 LFlags += -L $(LIBOPENCM3_DIR)/lib -lopencm3_stm32f3
@@ -62,6 +62,7 @@ libopencm3:
 OPENOCD_CFG = /usr/share/openocd/scripts/board/st_nucleo_f3.cfg
 
 
+LFlags += -T $(LINKER_SCRIPTS_DIR)/stm32f303.ld
 
 
 all: tsmr.hex
@@ -83,7 +84,7 @@ tsmr.elf: main.c.o \
 		lowlevel/encoders.c.o \
 		lowlevel/gpio.c.o \
 		lowlevel/motors.c.o
-	@$(CC) $^ $(LFlags) -o $@
+	$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
 
