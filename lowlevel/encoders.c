@@ -36,6 +36,10 @@ void encoder_right_setup(void)
 	gpio_mode_setup(ENCODER_R_CH2_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_R_CH2_PIN);
 	gpio_set_af(ENCODER_R_CH2_PORT, ENCODER_R_CH2_AF, ENCODER_R_CH2_PIN);
 }
+void encoders_setup() {
+  encoder_left_setup();
+  encoder_right_setup();
+}
 
 int encoder_left_get_counter(void)
 {
