@@ -4,31 +4,39 @@
 
 int main() {
   clock_setup();
-
   gpio_setup();
   eeprom_setup();
   encoders_setup();
-
   motors_setup();
 
-  // set_all_1();
-  bool status = about_da_power();
 
 
+  led_blink();
+
+  return 0;
+}
+
+
+void led_blink() {
   while(true) {
-    motor_b_set(0);
-    delay_ms(10);
-    motor_b_set(1);
-    delay_ms(1);
-  }
-
-
+    led_set_status(0);
+    delay_ms(1000);
     led_set_status(1);
     delay_ms(1000);
-    led_set_status(0);
-    delay_ms(100);
+  }
+}
 
+void motor_blink() {
+  while(true) {
+    motor_b_set(0);
+    delay_ms(1000);
+    motor_b_set(1);
+    delay_ms(1000);
+  }
+}
 
+void led_blink_smart() {
+  bool status = about_da_power();
   while(true) {
     led_set_status(1);
     delay_ms(100);
@@ -43,5 +51,4 @@ int main() {
     led_set_status(0);
     delay_ms(700);
   }
-  return 0;
 }

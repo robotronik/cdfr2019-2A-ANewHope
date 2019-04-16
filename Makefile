@@ -5,20 +5,23 @@ Makefile_path := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 Toolchain = arm-none-eabi-
 
 CC = $(Toolchain)gcc
+CFlags =
 CXX= $(Toolchain)g++
+CXXFlags =
 LD = $(Toolchain)ld
+LFlags =
+
 ifeq (, $(shell which ccache))
 else
 	CC := ccache $(CC)
 	CXX:= ccache $(CXX)
 endif
 
-CFlags =
-LFlags =
 
 # Generic flags
 CFlags += \
 	-Os \
+	-std=gnu11 \
 	-fdiagnostics-color=always \
 	-Wall \
 	-Wextra \
@@ -29,6 +32,9 @@ CFlags += \
 	# -fno-common \
 	# -fno-exceptions \
 	# --static
+
+CXXFlags += \
+	-std=gnu++14
 
 LFlags += \
 	-Wl,--gc-sections \
@@ -68,7 +74,7 @@ LFlags += -T $(LINKER_SCRIPTS_DIR)/stm32f303.ld
 all: tsmr.hex
 
 %.cpp.o: %.cpp Makefile
-	@$(CXX) $(CFlags) $< -o $@ -c
+	@$(CXX) $(CFlags) $(CXXFlags) $< -o $@ -c
 	@echo CXX $<
 
 %.c.o: %.c Makefile
