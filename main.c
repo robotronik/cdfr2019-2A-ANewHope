@@ -10,7 +10,6 @@ int main() {
   motors_setup();
 
 
-
   led_blink();
 
   return 0;
