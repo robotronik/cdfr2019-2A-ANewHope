@@ -5,3 +5,6 @@
 *.o
 *.elf
 *.hex
+
+# log files
+*.log
