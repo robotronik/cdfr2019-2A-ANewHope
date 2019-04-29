@@ -26,7 +26,7 @@ int main() {
   while(1)
   {
     test_odom=odometry_get_position();
-    gpio_toggle(LED_PORT, LED_PIN);
+    //gpio_toggle(LED_PORT, LED_PIN);
     echo("blink\n\r");
     echo_int(test_odom.left_count);
     echo("\n\r");

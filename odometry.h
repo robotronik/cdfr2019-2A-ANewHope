@@ -20,11 +20,11 @@
 #define DELTA_L ENCODER_STEP_DIST/ENCODER_DIST//ENCODER_STEP_DIST/ENCODER_DIST
 
 //POOLING Timer
-#define ODOM_TIM TIM3
-#define timX_isr(void) tim3_isr(void)
-#define ODOM_RCC_TIM RCC_TIM3
-#define ODOM_NVIC_TIM_IRQ NVIC_TIM3_IRQ
-#define ODOM_RST_TIM RST_TIM3
+#define ODOM_TIM TIM15
+#define timX_isr(void) tim1_brk_tim15_isr(void) //magic trick of timer 15 normaly tim3_isr
+#define ODOM_RCC_TIM RCC_TIM15
+#define ODOM_NVIC_TIM_IRQ NVIC_TIM1_BRK_TIM15_IRQ //normaly NVIC_TIM3_IRQ
+#define ODOM_RST_TIM RST_TIM15
 #define ODOM_TIM_PRESCALER ((rcc_apb1_frequency * 2) / 5000)//change these 2 lines to setup interruption frequency
 #define ODOM_TIM_PERIOD 600
 
