@@ -36,10 +36,6 @@ void encoder_right_setup(void)
 	gpio_mode_setup(ENCODER_R_CH2_PORT, GPIO_MODE_AF, ENCODER_INPUT_CFG, ENCODER_R_CH2_PIN);
 	gpio_set_af(ENCODER_R_CH2_PORT, ENCODER_R_CH2_AF, ENCODER_R_CH2_PIN);
 }
-void encoders_setup() {
-  encoder_left_setup();
-  encoder_right_setup();
-}
 
 int encoder_left_get_counter(void)
 {
@@ -53,4 +49,32 @@ int encoder_right_get_counter(void)
   if(ENCODER_R_INVERSION)
     return ENCODER_PERIOD-timer_get_counter(ENCODER_R_TIM);
   return timer_get_counter(ENCODER_R_TIM);
+}
+
+int encoder_left_update(volatile int *prev_count)
+{
+  const int cnt = encoder_left_get_counter();
+
+  int dl = cnt - *prev_count;
+  *prev_count = cnt;
+  if(dl > 1){
+    dl = -1;
+  }else if(dl < -1){
+    dl = +1;
+  }
+  return dl;
+}
+
+int encoder_right_update(volatile int *prev_count)
+{
+  const int cnt = encoder_right_get_counter();
+
+  int dl = cnt - *prev_count;
+  *prev_count = cnt;
+  if(dl > 1){
+    dl = -1;
+  }else if(dl < -1){
+    dl = +1;
+  }
+  return dl;
 }

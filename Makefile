@@ -85,7 +85,9 @@ all: tsmr.hex
 
 tsmr.elf: main.c.o \
 		lowlevel/clock.c.o\
-		lowlevel/debug.c.o
+		lowlevel/debug.c.o\
+		lowlevel/encoders.c.o\
+		odometry.c.o
 	$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
