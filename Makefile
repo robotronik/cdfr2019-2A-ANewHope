@@ -10,6 +10,7 @@ CXX= $(Toolchain)g++
 CXXFlags =
 LD = $(Toolchain)ld
 LFlags =
+GDB=$(Toolchain)gdb
 
 ifeq (, $(shell which ccache))
 else
@@ -83,13 +84,8 @@ all: tsmr.hex
 
 
 tsmr.elf: main.c.o \
-		lowlevel/adc.c.o \
-		lowlevel/can.c.o \
-		lowlevel/clock.c.o \
-		lowlevel/eeprom.c.o \
-		lowlevel/encoders.c.o \
-		lowlevel/gpio.c.o \
-		lowlevel/motors.c.o
+		lowlevel/clock.c.o\
+		lowlevel/debug.c.o
 	$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
@@ -99,14 +95,26 @@ tsmr.elf: main.c.o \
 	@echo OBJCOPY $@
 
 
-
+#please do not put sudo before openocd, please run
+#sudo usermod -a -G uucp <user> for serial monitor
+#for udev rule:
+#nano /etc/udev/rules.d/70-st-link.rules
+#  #NUCLEO ST-LINK/V2.1
+#  ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b",TAG+="uaccess"
+#to find theses values lsusb
+#then udevadm control --reload-rules
+#unplug and plug st-link
 %.flash: %.hex
-	sudo openocd -f $(OPENOCD_CFG) \
+	openocd -f $(OPENOCD_CFG) \
 		-c "init" \
 		-c "reset init" \
 		-c "flash write_image erase $^" \
 		-c "reset" \
 		-c "shutdown"
+
+#NOTE: the files in the gdb dir must correspond to your MCU
+%.debug: %.elf
+	$(GDB) $^ --command=gdb/attach.gdb
 
 clean:
 	rm -f *.o *.a *.hex *.elf
