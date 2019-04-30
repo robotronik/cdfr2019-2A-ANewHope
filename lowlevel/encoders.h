@@ -6,7 +6,7 @@
 #include <libopencm3/stm32/timer.h>
 
 #define ENCODER_PERIOD 300*4-1 //number of ticks per turn, encoder 300CPR
-#define ENCODER_INPUT_CFG GPIO_PUPD_PULLUP // GPIO_PUPD_PULLUP GPIO_PUPD_PULLDOWN GPIO_PUPD_NONE
+#define ENCODER_INPUT_CFG GPIO_PUPD_NONE // GPIO_PUPD_PULLUP GPIO_PUPD_PULLDOWN GPIO_PUPD_NONE
 
 /*******************************
 Left encoder configuration

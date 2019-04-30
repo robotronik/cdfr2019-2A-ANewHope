@@ -88,6 +88,7 @@ tsmr.elf: main.c.o \
 		lowlevel/debug.c.o\
 		lowlevel/encoders.c.o\
 		lowlevel/motors.c.o\
+		pid.c.o\
 		odometry.c.o
 	$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
