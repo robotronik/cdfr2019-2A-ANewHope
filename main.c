@@ -2,6 +2,7 @@
 #include "lowlevel/clock.h"
 
 #include "lowlevel/debug.h"
+#include "lowlevel/motors.h"
 #include "odometry.h"
 
 #include <libopencm3/stm32/gpio.h>
@@ -20,19 +21,23 @@ int main() {
   gpio_mode_setup(LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LED_PIN);
 
   debug_setup();
+  motors_setup();
   odometry_setup();
   odometry test_odom;odometry_get_position();
 
   while(1)
   {
     test_odom=odometry_get_position();
+    motor_b_set(-0.5);
+    delay_ms(1000);
+    motor_b_set(1);
     //gpio_toggle(LED_PORT, LED_PIN);
     echo("blink\n\r");
     echo_int(test_odom.left_count);
     echo("\n\r");
     echo_int(test_odom.right_count);
     echo("\n\r");
-    delay_ms(500);
+    delay_ms(1000);
   }
 
   return 0;

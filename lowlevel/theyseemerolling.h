@@ -21,11 +21,6 @@ void* can_get_message();
 void can_send(void* msg);
 
 /*****************************************************************************/
-void motors_setup();
-void motor_a_set(int32_t signed_speed);
-void motor_b_set(int32_t signed_speed);
-
-/*****************************************************************************/
 void adcs_setup();
 // Value in ampers ?
 uint32_t adc_a_value();

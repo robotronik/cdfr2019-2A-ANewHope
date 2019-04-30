@@ -1,98 +1,97 @@
-#include "theyseemerolling.h"
-
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
-
-// Motor A :
-#define MotorA_Enable   GPIO4
-#define MotorA_Input1   GPIO3
-#define MotorA_Input2   GPIO2
-
-// Motor B :
-#define MotorB_Enable   GPIO6
-#define MotorB_Input1   GPIO7
-#define MotorB_Input2   GPIO5
-
+#include "motors.h"
 
 void motors_setup() {
-  rcc_periph_clock_enable(RCC_GPIOA);
-  rcc_periph_clock_enable(RCC_TIM2); // CH4 = PA3_AF1
-  rcc_periph_clock_enable(RCC_TIM3); // CH2 = PA7_AF2
+  rcc_periph_clock_enable(PWM_RCC_TIM);//configuration of PWM timer
+  timer_set_mode(PWM_TIM,TIM_CR1_CKD_CK_INT,TIM_CR1_CMS_EDGE,TIM_CR1_DIR_UP);
+	timer_enable_preload(PWM_TIM);
+	timer_continuous_mode(PWM_TIM);
+	timer_set_repetition_counter(PWM_TIM, 0);
+  timer_enable_break_main_output(PWM_TIM);
+  timer_set_prescaler(PWM_TIM, PWM_TIM_PRESCALER);
+	timer_set_period(PWM_TIM, PWM_TIM_PERIOD);
 
-  // Enable pins of driver (power on)
-  gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
-    MotorA_Enable | MotorB_Enable
-  );
-  // IN2 pins of driver (forward/reverse)
-  gpio_mode_setup(GPIOA, GPIO_MODE_AF,     GPIO_PUPD_NONE,
-    MotorA_Input2 | MotorB_Input2
-  );
-  // IN1 pins of driver (Speed by PWM)
-  gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
-    MotorA_Input1 | MotorB_Input1
-  );
-  gpio_set_af    (GPIOA, GPIO_AF1, MotorA_Input1);
-  gpio_set_af    (GPIOA, GPIO_AF2, MotorB_Input1);
-  gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ,
-    MotorA_Input1 | MotorB_Input1
-  );
+  //PWM output configuration MotorA
+  rcc_periph_clock_enable(MotorA_Enable_PORT_RCC);
+	gpio_mode_setup(MotorA_Enable_PORT,GPIO_MODE_AF,GPIO_PUPD_NONE,MotorA_Enable_PIN);
+	gpio_set_output_options(MotorA_Enable_PORT, GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ, MotorA_Enable_PIN);
+	gpio_set_af(MotorA_Enable_PORT,MotorA_Enable_PIN_AF,MotorA_Enable_PIN);
+	timer_set_oc_mode(PWM_TIM, MotorA_Enable_PIN_TIM_OC, MotorA_Enable_PIN_TIM_OCM_PWM);
+	timer_enable_oc_preload(PWM_TIM, MotorA_Enable_PIN_TIM_OC);
+  timer_set_oc_value(PWM_TIM, MotorA_Enable_PIN_TIM_OC, 0);//set 0 by default
+  timer_enable_oc_output(PWM_TIM, MotorA_Enable_PIN_TIM_OC);
 
-  timer_set_mode              (TIM2,
-    TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP
-  );
-  timer_set_repetition_counter(TIM2, 0);
-  timer_enable_preload        (TIM2);
-  timer_continuous_mode       (TIM2);
-  timer_set_prescaler         (TIM2, 64);
-  timer_set_period            (TIM2, PWM_period);
-  timer_enable_oc_output      (TIM2, TIM_OC4);
-  timer_set_oc_mode           (TIM2, TIM_OC4, TIM_OCM_PWM2);
+  //MotorA direction control
+  rcc_periph_clock_enable(MotorA_Input1_PORT_RCC);
+  gpio_mode_setup(MotorA_Input1_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,MotorA_Input1_PIN);
+  rcc_periph_clock_enable(MotorA_Input2_PORT_RCC);
+  gpio_mode_setup(MotorA_Input2_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,MotorA_Input2_PIN);
 
-  timer_set_mode              (TIM3,
-    TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP
-  );
-  timer_set_repetition_counter(TIM3, 0);
-  timer_enable_preload        (TIM3);
-  timer_continuous_mode       (TIM3);
-  timer_set_prescaler         (TIM3, 64);
-  timer_set_period            (TIM3, PWM_period);
-  timer_enable_oc_output      (TIM3, TIM_OC2);
-  timer_set_oc_mode           (TIM3, TIM_OC2, TIM_OCM_PWM2);
+  //PWM output configuration MotorB
+  rcc_periph_clock_enable(MotorB_Enable_PORT_RCC);
+	gpio_mode_setup(MotorB_Enable_PORT,GPIO_MODE_AF,GPIO_PUPD_NONE,MotorB_Enable_PIN);
+	gpio_set_output_options(MotorB_Enable_PORT, GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ, MotorB_Enable_PIN);
+	gpio_set_af(MotorB_Enable_PORT,MotorB_Enable_PIN_AF,MotorB_Enable_PIN);
+	timer_set_oc_mode(PWM_TIM, MotorB_Enable_PIN_TIM_OC, MotorB_Enable_PIN_TIM_OCM_PWM);
+	timer_enable_oc_preload(PWM_TIM, MotorB_Enable_PIN_TIM_OC);
+  timer_set_oc_value(PWM_TIM, MotorB_Enable_PIN_TIM_OC, 0);//set 0 by default
+  timer_enable_oc_output(PWM_TIM, MotorB_Enable_PIN_TIM_OC);
 
-  // Finally enable the driver
-  timer_enable_counter(TIM2);
-  timer_enable_counter(TIM3);
-  timer_set_oc_value(TIM2, TIM_OC4, 0);
-  timer_set_oc_value(TIM3, TIM_OC2, 0);
-  gpio_set(GPIOA, MotorA_Enable | MotorB_Enable);
-  gpio_set(GPIOA, MotorA_Input2 | MotorB_Input2);
+  //MotorB direction control
+  rcc_periph_clock_enable(MotorB_Input1_PORT_RCC);
+  gpio_mode_setup(MotorB_Input1_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,MotorB_Input1_PIN);
+  rcc_periph_clock_enable(MotorB_Input2_PORT_RCC);
+  gpio_mode_setup(MotorB_Input2_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,MotorB_Input2_PIN);
+
+  //start PWM
+  timer_generate_event(PWM_TIM, TIM_EGR_UG);
+  timer_enable_counter(PWM_TIM);
 }
 
-// Warning : 0%(forward) and 100%(reverse) have the same PWM value.
-// The scale is inverted.
-
-void motor_a_set(int32_t signed_speed) {
+//signed voltage between -1 and 1
+void motor_a_set(float signed_voltage) {
   uint32_t value = 0;
-  if (signed_speed > 0) {
-    value = PWM_period/100 * signed_speed;
-    gpio_set(GPIOA, MotorA_Input2);
-  } else {
-    value = PWM_period/100 * -signed_speed;
-    gpio_clear(GPIOA, MotorA_Input2);
+
+  signed_voltage*=MotorA_Inversion;//apply the polarity inversion, or not
+
+  if (signed_voltage < 0) {//set the motor direction
+    signed_voltage=-signed_voltage;
+    gpio_set(MotorA_Input1_PORT, MotorA_Input1_PIN);
+    gpio_clear(MotorA_Input2_PORT, MotorA_Input2_PIN);
+  }
+  else {
+    gpio_clear(MotorA_Input1_PORT, MotorA_Input1_PIN);
+    gpio_set(MotorA_Input2_PORT, MotorA_Input2_PIN);
   }
 
-  timer_set_oc_value(TIM2, TIM_OC4, value);
+  if (signed_voltage>max_voltage)//limit the maximum voltage
+  {
+    signed_voltage=max_voltage;
+  }
+  value=signed_voltage*PWM_TIM_PERIOD;
+
+  timer_set_oc_value(PWM_TIM, MotorA_Enable_PIN_TIM_OC, value);
 }
 
-void motor_b_set(int32_t signed_speed) {
+void motor_b_set(float signed_voltage) {
   uint32_t value = 0;
-  if (signed_speed > 0) {
-    value = PWM_period/100 * signed_speed;
-    gpio_set(GPIOA, MotorB_Input2);
-  } else {
-    value = PWM_period/100 * -signed_speed;
-    gpio_clear(GPIOA, MotorB_Input2);
+
+  signed_voltage*=MotorB_Inversion;
+
+  if (signed_voltage < 0) {//set the motor direction
+    signed_voltage=-signed_voltage;
+    gpio_set(MotorB_Input1_PORT, MotorB_Input1_PIN);
+    gpio_clear(MotorB_Input2_PORT, MotorB_Input2_PIN);
+  }
+  else {
+    gpio_clear(MotorB_Input1_PORT, MotorB_Input1_PIN);
+    gpio_set(MotorB_Input2_PORT, MotorB_Input2_PIN);
   }
 
-  timer_set_oc_value(TIM3, TIM_OC2, value);
+  if (signed_voltage>max_voltage)//limit the maximum voltage
+  {
+    signed_voltage=max_voltage;
+  }
+  value=signed_voltage*PWM_TIM_PERIOD;
+
+  timer_set_oc_value(PWM_TIM, MotorB_Enable_PIN_TIM_OC, value);
 }
