@@ -83,16 +83,38 @@ all: tsmr.hex
 	@echo CC $<
 
 
-tsmr.elf: main.c.o \
-		lowlevel/clock.c.o\
-		lowlevel/debug.c.o\
-		lowlevel/encoders.c.o\
-		lowlevel/motors.c.o\
-		pid.c.o\
-		odometry.c.o
+tsmr.elf: \
+		lowlevel/adc.c.o \
+		lowlevel/can.c.o \
+		lowlevel/clock.c.o \
+		lowlevel/debug.c.o \
+		lowlevel/eeprom.c.o \
+		lowlevel/encoders.c.o \
+		lowlevel/gpio.c.o \
+		lowlevel/motors.c.o \
+		odometry.c.o \
+		pid.c.o \
+		main.c.o \
+		|
 	$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
+
+tests.elf: \
+		lowlevel/adc.c.o \
+		lowlevel/can.c.o \
+		lowlevel/clock.c.o \
+		lowlevel/debug.c.o \
+		lowlevel/eeprom.c.o \
+		lowlevel/encoders.c.o \
+		lowlevel/gpio.c.o \
+		lowlevel/motors.c.o \
+		odometry.c.o \
+		pid.c.o \
+		main_tests.c.o \
+		|
+	$(CC) $(CFlags) $^ $(LFlags) -o $@
+	@echo LINK $@
 
 %.hex: %.elf
 	@arm-none-eabi-objcopy -Oihex $^ $@
