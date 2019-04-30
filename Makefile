@@ -130,6 +130,12 @@ tests.elf: \
 #to find theses values lsusb
 #then udevadm control --reload-rules
 #unplug and plug st-link
+
+install_udev:
+	@echo "Installing udev rules…"
+	@sudo ./install_udev.sh
+	@echo "Now, unplug and re-plug the st-link."
+
 %.flash: %.hex
 	openocd -f $(OPENOCD_CFG) \
 		-c "init" \
