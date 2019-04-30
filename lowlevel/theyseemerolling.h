@@ -10,6 +10,7 @@
 void gpio_setup();
 
 void led_set_status(uint32_t status); // PWM ?
+void led_toggle_status();
 bool about_da_power();
 
 void set_all_1();

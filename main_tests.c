@@ -2,15 +2,17 @@
 #include "lowlevel/clock.h"
 #include "lowlevel/eeprom.h"
 
+#include "lowlevel/debug.h"
+
 int main() {
   clock_setup();
   gpio_setup();
-  // eeprom_setup();
+  debug_setup();
+  eeprom_setup();
   // encoders_setup();
   // motors_setup();
 
-
-  led_blink();
+  uart_send();
 
   return 0;
 }
@@ -22,6 +24,14 @@ void led_blink() {
     delay_ms(1000);
     led_set_status(1);
     delay_ms(1000);
+  }
+}
+
+void uart_send() {
+  while(true) {
+    echo("hello world (sure ?)\n\r");
+    led_toggle_status();
+    delay_ms(300);
   }
 }
 
