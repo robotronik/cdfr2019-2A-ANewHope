@@ -16,21 +16,24 @@ int main() {
   int sum_goal=0, diff_goal=0;
 
   PID_DATA pid_sum = (PID_DATA) {.Te = 0.01,
-                        .Kp = 0.01,
-                        .Ki = 0.01,
-                        .Kd = 0.0001,
+                        .Kp = 0.0,//0.001,
+                        .Ki = 0.00,
+                        .Kd = 0.000,
+                        .max_eps = 100000000,
                         .position_tolerance = 100};
   pid_init(&pid_sum);
+
   PID_DATA pid_diff = (PID_DATA) {.Te = 0.01,
-                         .Kp = 0.01,
-                         .Ki = 0.01,
-                         .Kd = 0.0001,
+                         .Kp = 0.0005,
+                         .Ki = 0.000,
+                         .Kd = 0.000,
+                         .max_eps = 350,
                          .position_tolerance = 100};
   pid_init(&pid_diff);
 
   clock_setup();
   gpio_setup();
-  //debug_setup();
+  debug_setup();
   motors_setup();
   odometry_setup();
   odometry odom;
@@ -38,27 +41,22 @@ int main() {
 
   while(1)
   {
-    odom=odometry_get_position();
-    motor_b_set(-0.5);
-    delay_ms(1000);
-    motor_b_set(1);
-    echo("blink\n\r");
-    echo_int(odom.left_count);
-    echo("\n\r");
-    echo_int(odom.right_count);
-    echo("\n\r");
-    delay_ms(1000);
+    odom = odometry_get_position();
 
-    voltage_sum = pid(&pid_sum, sum_goal - 0.5 * (odom.left_count + odom.right_count));
-    voltage_diff = pid(&pid_diff, diff_goal - (odom.right_count - odom.left_count));
+    print_odometry(&odom);
+
+    voltage_sum = pid(&pid_sum, sum_goal - 0.5 * (odom.left_total_count + odom.right_total_count));
+    voltage_diff = pid(
+      &pid_diff,
+      diff_goal - (odom.right_total_count - odom.left_total_count)
+    );
 
     voltage_A = voltage_sum + voltage_diff;
     voltage_B = voltage_sum - voltage_diff;
 
-    //motor_a_set(voltage_A);
-    //motor_b_set(voltage_B);
-    //delay_ms(pid_sum.Te);
-
+    motor_a_set(voltage_A);
+    motor_b_set(voltage_B);
+    delay_ms(pid_sum.Te);
   }
 
   return 0;
