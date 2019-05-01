@@ -12,24 +12,19 @@ void motor_blink();
 void led_blink();
 void test_encoders();
 void test_direction_general();
+void test_odometry();
 
 int main() {
   // Basic initialization
   clock_setup();
   gpio_setup();
-
   debug_setup();
 
   odometry_setup();
-  // eeprom_setup();
-  motors_setup();
 
-  // uart_send();
-  // motor_blink();
+  // motors_setup();
 
-  // test_encoders();
-
-  test_direction_general();
+  test_odometry();
 
   return 0;
 }
@@ -117,10 +112,16 @@ void test_encoders() {
   }
 }
 
+void ramp_motors(double begin, double end, int delay_by_step) {
+  // for ()
+
+
+
+}
 
 void test_direction_general() {
-    motor_b_set(1);
-    motor_a_set(1);
+  motor_b_set(0.2);
+  motor_a_set(0.2);
 
   odometry odom_old, odom_new;
 
@@ -148,6 +149,31 @@ void test_direction_general() {
       echo(" 0 ");
 
     echo("\n\r");
+
+    delay_ms(300);
+  }
+
+}
+
+void test_odometry() {
+  odometry odom;
+
+  while(1)
+  {
+    odom = odometry_get_position();
+
+    echo("\r\n");
+    echo("\r\nl=");
+    echo_int((int)odom.left_count);
+    echo("\t; r=");
+    echo_int((int)odom.right_count);
+
+    echo("\r\nx=");
+    echo_int((int)odom.x);
+    echo("\t; y=");
+    echo_int((int)odom.y);
+    echo("\t; theta=");
+    echo_int((int)(odom.theta*100));
 
     delay_ms(300);
   }

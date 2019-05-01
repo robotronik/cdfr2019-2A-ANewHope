@@ -1,7 +1,8 @@
 #include "odometry.h"
 
-volatile odometry odometry_internal;//WARNING global odometry variable for update during interruption
-//do not use directly outside odometry.c
+// WARNING global odometry variable for update during interruption
+volatile odometry odometry_internal;
+// do not use directly outside odometry.c
 
 void odometry_setup(void)
 {
@@ -37,21 +38,28 @@ void timX_isr(void)
 {
   if (timer_get_flag(ODOM_TIM, TIM_SR_CC1IF))
   {
-    timer_clear_flag(ODOM_TIM, TIM_SR_CC1IF);/* Clear compare interrupt flag. */
-    //gpio_toggle(LED_PORT, LED_PIN);
-    int dl_l=encoder_left_update(&odometry_internal.left_count);//first read the encoders, should not be different than -1, 0 or 1
-    int dl_r=encoder_right_update(&odometry_internal.right_count);
-    odometry_internal.x+=cosf(odometry_internal.theta)*ENCODER_STEP_DIST*(dl_l+dl_r);//update the position
-    odometry_internal.y+=sinf(odometry_internal.theta)*ENCODER_STEP_DIST*(dl_l+dl_r);
+    // Clear compare interrupt flag.
+    timer_clear_flag(ODOM_TIM, TIM_SR_CC1IF);
+
+    // first read the encoders, should not be different than -1, 0 or 1
+    int dl_l = encoder_left_update (&odometry_internal.left_count);
+    int dl_r = encoder_right_update(&odometry_internal.right_count);
+
+    double tmp_delta = ENCODER_STEP_DIST * (dl_l + dl_r)/2;
+
+    // update the position
+    odometry_internal.x += tmp_delta * cos(odometry_internal.theta);
+    odometry_internal.y += tmp_delta * sin(odometry_internal.theta);
     odometry_internal.theta+=DELTA_L*(dl_l-dl_r);
 
-    if(odometry_internal.theta>PI)//limit robot angle between -PI and PI
+    //limit robot angle between -PI and PI
+    if(odometry_internal.theta > PI)
     {
-      odometry_internal.theta=odometry_internal.theta-2*PI;
+      odometry_internal.theta += -2*PI;
     }
-    else if(odometry_internal.theta<PI)
+    else if(odometry_internal.theta < -PI)
     {
-      odometry_internal.theta=odometry_internal.theta+2*PI;
+      odometry_internal.theta += +2*PI;
     }
   }
 }

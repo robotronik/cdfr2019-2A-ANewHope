@@ -10,10 +10,10 @@
 #define PWM_TIM           TIM3
 #define PWM_RCC_TIM       RCC_TIM3
 #define PWM_TIM_PERIOD    1000
-#define PWM_TIM_PRESCALER 50
+#define PWM_TIM_PRESCALER 1
 
-#define MotorA_Inversion -1.0 //1 no reverse, -1 reverse
-#define MotorB_Inversion -1.0 //1 no reverse, -1 reverse
+#define MotorA_Inversion (-1.0) //1 no reverse, -1 reverse
+#define MotorB_Inversion (-1.0) //1 no reverse, -1 reverse
 
 
 // Motor A :
