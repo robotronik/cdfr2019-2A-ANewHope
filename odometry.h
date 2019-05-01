@@ -8,6 +8,7 @@
 
 #define PI 3.14159265359
 #include "lowlevel/encoders.h"
+#include "lowlevel/debug.h"
 
 #define LED_PORT GPIOA
 #define LED_PIN GPIO5
@@ -42,9 +43,12 @@ typedef struct{//positions in mm and angles in rad
   double theta;
 
   int left_count;//last encoders count
+  int left_total_count;
   int right_count;
+  int right_total_count;
 }odometry;
 
 void odometry_setup(void);
 odometry odometry_get_position(void);
 
+void print_odometry(odometry *odom);

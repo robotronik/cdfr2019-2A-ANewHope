@@ -4,19 +4,20 @@
  */
 #pragma once
 
-#include <stdlib.h>
 
 typedef struct{
-  float Kp;
-  float Ki;
-  float Kd;
-  float prev_eps;
-  float integral;
-  float Te;
+  double Kp;
+  double Ki;
+  double Kd;
+  int max_eps;
+
+  double prev_eps;
+  double integral;
+  double Te;
   int position_tolerance;
-  float speed_tolerance;
+  double speed_tolerance;
 } PID_DATA;
 
 void pid_init(PID_DATA *pid);
-float pid(PID_DATA *pid, int eps);
+double pid(PID_DATA *pid, int eps);
 int reached(PID_DATA *pid,int eps);

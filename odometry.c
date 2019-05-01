@@ -28,6 +28,8 @@ void odometry_setup(void)
   odometry_internal.theta=0;
   odometry_internal.left_count=encoder_right_get_counter();
   odometry_internal.right_count=encoder_left_get_counter();
+  odometry_internal.left_total_count=0;
+  odometry_internal.right_total_count=0;
 
   //start pooling
   nvic_enable_irq(ODOM_NVIC_TIM_IRQ);
@@ -44,6 +46,8 @@ void timX_isr(void)
     // first read the encoders, should not be different than -1, 0 or 1
     int dl_l = encoder_left_update (&odometry_internal.left_count);
     int dl_r = encoder_right_update(&odometry_internal.right_count);
+    odometry_internal.left_total_count+=dl_l;
+    odometry_internal.right_total_count+=dl_r;
 
     double tmp_delta = ENCODER_STEP_DIST * (dl_l + dl_r)/2;
 
@@ -67,4 +71,20 @@ void timX_isr(void)
 odometry odometry_get_position(void)
 {
   return odometry_internal;
+}
+
+
+void print_odometry(odometry *odom) {
+  echo("\r\n");
+  echo("\r\nl=");
+  echo_int((int)odom->left_count);
+  echo("\t; r=");
+  echo_int((int)odom->right_count);
+
+  echo("\r\nx=");
+  echo_int((int)odom->x);
+  echo("\t; y=");
+  echo_int((int)odom->y);
+  echo("\t; theta=");
+  echo_int((int)(odom->theta*100));
 }
