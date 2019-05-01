@@ -67,7 +67,7 @@ void eeprom_setup() {
 
 
 static const int capacity   = 0x80;
-static const int page_size  = 16;
+// static const int page_size  = 16;
 
 // Commands supported by all chips
 #define EEPROM_CAT25_COMMAND_READ   0x03
