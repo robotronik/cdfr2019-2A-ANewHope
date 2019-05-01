@@ -4,7 +4,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/timer.h>
 
-#define max_voltage 1.0 //in absolute value between 0.0 and 1.0 to limit the motors power
+#define max_voltage 0.4 //in absolute value between 0.0 and 1.0 to limit the motors power
 
 //Timer for PWM
 #define PWM_TIM           TIM3
