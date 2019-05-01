@@ -1,5 +1,4 @@
-#ifndef __ENCODERS_H
-#define __ENCODERS_H
+#pragma once
 
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
@@ -14,17 +13,17 @@ Left encoder configuration
 #define ENCODER_L_RCC_TIM RCC_TIM1
 #define ENCODER_L_TIM TIM1
 
-#define ENCODER_L_INVERSION 1
+#define ENCODER_L_INVERSION 0
 
-#define ENCODER_L_CH1_PORT GPIOC
-#define ENCODER_L_CH1_PORT_RCC RCC_GPIOC
-#define ENCODER_L_CH1_AF GPIO_AF2
-#define ENCODER_L_CH1_PIN GPIO0
+#define ENCODER_L_CH1_PORT GPIOA
+#define ENCODER_L_CH1_PORT_RCC RCC_GPIOA
+#define ENCODER_L_CH1_AF GPIO_AF6
+#define ENCODER_L_CH1_PIN GPIO8
 
-#define ENCODER_L_CH2_PORT GPIOC
-#define ENCODER_L_CH2_PORT_RCC RCC_GPIOC
-#define ENCODER_L_CH2_AF GPIO_AF2
-#define ENCODER_L_CH2_PIN GPIO1
+#define ENCODER_L_CH2_PORT GPIOA
+#define ENCODER_L_CH2_PORT_RCC RCC_GPIOA
+#define ENCODER_L_CH2_AF GPIO_AF6
+#define ENCODER_L_CH2_PIN GPIO9
 
 /*******************************
 Right encoder configuration
@@ -52,5 +51,3 @@ int encoder_right_get_counter(void);
 
 int encoder_left_update(volatile int *prev_count);//delta steps in small time difference
 int encoder_right_update(volatile int *prev_count);
-
-#endif
