@@ -13,7 +13,7 @@ void debug_setup()
 
   rcc_periph_clock_enable(DEBUG_RCC_USART);
 
-  // usart_disable(DEBUG_USART);
+  usart_disable(DEBUG_USART);
   usart_set_baudrate(DEBUG_USART, DEBUG_UART_SPEED);
   usart_set_databits(DEBUG_USART, 8);
   usart_set_stopbits(DEBUG_USART, USART_STOPBITS_1);

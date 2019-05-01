@@ -12,7 +12,8 @@ simple uart configuration for debugging
 //DEFINES FOR DEBUG_UART
 #define DEBUG_RCC_USART RCC_USART1
 #define DEBUG_USART USART1
-#define DEBUG_UART_SPEED 19200 // Bug in libopencm3 ? Really 9600.
+#define DEBUG_UART_SPEED (9600*2)
+// Bug in libopencm3 ? Need to *2 because of APB2/APB1 weird things.
 
 #define DEBUG_PORT_TX GPIOB
 #define DEBUG_PORT_TX_RCC RCC_GPIOB // clock of GPIO port
