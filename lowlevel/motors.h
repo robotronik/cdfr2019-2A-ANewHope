@@ -51,5 +51,5 @@
 #define MotorB_Input2_PIN  GPIO5
 
 void motors_setup();
-void motor_a_set(float signed_voltage);//normalized voltage between -1 and 1
-void motor_b_set(float signed_voltage);
+void motor_a_set(double signed_voltage);//normalized voltage between -1 and 1
+void motor_b_set(double signed_voltage);

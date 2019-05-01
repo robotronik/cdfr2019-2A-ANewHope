@@ -48,12 +48,12 @@ void motors_setup() {
 }
 
 //signed voltage between -1 and 1
-void motor_a_set(float signed_voltage) {
+void motor_a_set(double signed_voltage) {
   uint32_t value = 0;
 
   signed_voltage*=MotorA_Inversion;//apply the polarity inversion, or not
 
-  if (signed_voltage < 0) {//set the motor direction
+  if (signed_voltage < 0.0) {//set the motor direction
     signed_voltage=-signed_voltage;
     gpio_set(MotorA_Input1_PORT, MotorA_Input1_PIN);
     gpio_clear(MotorA_Input2_PORT, MotorA_Input2_PIN);
@@ -72,12 +72,12 @@ void motor_a_set(float signed_voltage) {
   timer_set_oc_value(PWM_TIM, MotorA_Enable_PIN_TIM_OC, value);
 }
 
-void motor_b_set(float signed_voltage) {
+void motor_b_set(double signed_voltage) {
   uint32_t value = 0;
 
   signed_voltage*=MotorB_Inversion;
 
-  if (signed_voltage < 0) {//set the motor direction
+  if (signed_voltage < 0.0) {//set the motor direction
     signed_voltage=-signed_voltage;
     gpio_set(MotorB_Input1_PORT, MotorB_Input1_PIN);
     gpio_clear(MotorB_Input2_PORT, MotorB_Input2_PIN);
