@@ -149,5 +149,10 @@ install_udev:
 	$(GDB) $^ --command=gdb/attach.gdb
 
 clean:
-	rm -f *.o *.a *.hex *.elf
-	rm -f lowlevel/*.o
+		find . \
+		\( -not -path  "./hal_common*" \) \
+		\( -name "*.o" \
+		-o -name "*.a" \
+		-o -name "*.hex" \
+		-o -name "*.elf" \
+		\) -delete
