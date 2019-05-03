@@ -5,7 +5,7 @@
 
 #include "lowlevel/debug.h"
 
-#include "odometry.h"
+#include "asservissement/odometry.h"
 
 void led_blink();
 void motor_blink();

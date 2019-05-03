@@ -1,10 +1,20 @@
 #include "odometry.h"
+#include "calibration.h"
+
+#include "lowlevel/encoders.h"
+#include "lowlevel/debug.h"
+
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/timer.h>
+
+#include <math.h>//LDLIBS+= -lm
 
 // WARNING global odometry variable for update during interruption
 volatile odometry odometry_internal;
 // do not use directly outside odometry.c
 
-void odometry_setup(void)
+void odometry_setup()
 {
   //gpio_mode_setup(LED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LED_PIN);
 
@@ -49,26 +59,26 @@ void timX_isr(void)
     odometry_internal.left_total_count+=dl_l;
     odometry_internal.right_total_count+=dl_r;
 
-    double tmp_delta = ENCODER_STEP_DIST * (dl_l + dl_r)/2;
+    double tmp_delta = Encoders_Dist_Per_Step * (dl_l + dl_r)/2;
 
     // update the position
     odometry_internal.x += tmp_delta * cos(odometry_internal.theta);
     odometry_internal.y += tmp_delta * sin(odometry_internal.theta);
-    odometry_internal.theta+=DELTA_L*(dl_l-dl_r);
+    odometry_internal.theta += Encoders_Theta_Per_Diff * (dl_l-dl_r);
 
-    //limit robot angle between -PI and PI
-    if(odometry_internal.theta > PI)
+    //limit robot angle between -Pi and Pi
+    if(odometry_internal.theta > Pi)
     {
-      odometry_internal.theta += -2*PI;
+      odometry_internal.theta += -2*Pi;
     }
-    else if(odometry_internal.theta < -PI)
+    else if(odometry_internal.theta < -Pi)
     {
-      odometry_internal.theta += +2*PI;
+      odometry_internal.theta += +2*Pi;
     }
   }
 }
 
-odometry odometry_get_position(void)
+odometry odometry_get_position()
 {
   return odometry_internal;
 }

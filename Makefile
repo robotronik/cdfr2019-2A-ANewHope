@@ -71,6 +71,7 @@ OPENOCD_CFG = /usr/share/openocd/scripts/board/st_nucleo_f3.cfg
 
 LFlags += -T $(LINKER_SCRIPTS_DIR)/stm32f303.ld
 
+CFlags += -I.
 
 all: tsmr.hex
 
@@ -92,8 +93,9 @@ tsmr.elf: \
 		lowlevel/encoders.c.o \
 		lowlevel/gpio.c.o \
 		lowlevel/motors.c.o \
-		odometry.c.o \
-		pid.c.o \
+		asservissement/calibration.c.o \
+		asservissement/odometry.c.o \
+		asservissement/pid.c.o \
 		main.c.o \
 		|
 	$(CC) $(CFlags) $^ $(LFlags) -o $@
@@ -109,8 +111,9 @@ tests.elf: \
 		lowlevel/encoders.c.o \
 		lowlevel/gpio.c.o \
 		lowlevel/motors.c.o \
-		odometry.c.o \
-		pid.c.o \
+		asservissement/calibration.c.o \
+		asservissement/odometry.c.o \
+		asservissement/pid.c.o \
 		main_tests.c.o \
 		|
 	$(CC) $(CFlags) $^ $(LFlags) -o $@

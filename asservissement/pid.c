@@ -10,31 +10,32 @@
 	#define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
 
-void pid_init(PID_DATA *pid)
+void pid_init(PID_Status *pid, PID_Configuration const* config)
 {
-  pid->prev_eps=0;
-  pid->integral=0;
+  pid->prev_eps = 0;
+  pid->integral = 0;
+	pid->conf = config;
 }
 
-double pid(PID_DATA *pid, int eps)
+double pid(PID_Status *pid, int eps)
 {
-  eps = min(eps,  pid->max_eps);
-  eps = max(eps, -pid->max_eps);
+  eps = min(eps,  pid->conf->max_eps);
+  eps = max(eps, -pid->conf->max_eps);
 
-  pid->integral += pid->Te * eps;
+  pid->integral += pid->conf->Te * eps;
   double output =
-      pid->Kp * eps
-    + pid->Ki * pid->integral
-    + pid->Kd * (eps - pid->prev_eps) / pid->Te;
+      pid->conf->Kp * eps
+    + pid->conf->Ki * pid->integral
+    + pid->conf->Kd * (eps - pid->prev_eps) / pid->conf->Te;
 
   pid->prev_eps = eps;
   return output;
 }
 
-int reached(PID_DATA *pid, int eps)
+bool reached(PID_Status *pid, int eps)
 {
-  if(abs(eps)<pid->position_tolerance)
-    // && (abs(eps-pid->prev_eps))/pid->Te<pid->speed_tolerance)
-    return 1;
-  return 0;
+	return (
+		abs(eps) < pid->conf->position_tolerance
+		// && (abs(eps-pid->prev_eps) / (pid->Te<pid->speed_tolerance))
+	);
 }

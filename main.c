@@ -5,9 +5,7 @@
 
 #include "asservissement/odometry.h"
 #include "asservissement/pid.h"
-
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/rcc.h>
+#include "asservissement/calibration.h"
 
 int main() {
   float voltage_A=0,
@@ -16,21 +14,9 @@ int main() {
         voltage_diff=0; // motor control variables
   int sum_goal=0, diff_goal=0;
 
-  PID_DATA pid_sum = (PID_DATA) {.Te = 0.01,
-                        .Kp = 0.0,//0.001,
-                        .Ki = 0.00,
-                        .Kd = 0.000,
-                        .max_eps = 100000000,
-                        .position_tolerance = 100};
-  pid_init(&pid_sum);
-
-  PID_DATA pid_diff = (PID_DATA) {.Te = 0.01,
-                         .Kp = 0.0005,
-                         .Ki = 0.000,
-                         .Kd = 0.000,
-                         .max_eps = 350,
-                         .position_tolerance = 100};
-  pid_init(&pid_diff);
+  PID_Status pid_delta, pid_theta;
+  pid_init(&pid_delta, &PID_Configuration_delta);
+  pid_init(&pid_theta, &PID_Configuration_theta);
 
   clock_setup();
   gpio_setup();
@@ -46,9 +32,9 @@ int main() {
 
     print_odometry(&odom);
 
-    voltage_sum = pid(&pid_sum, sum_goal - 0.5 * (odom.left_total_count + odom.right_total_count));
+    voltage_sum = pid(&pid_delta, sum_goal - 0.5 * (odom.left_total_count + odom.right_total_count));
     voltage_diff = pid(
-      &pid_diff,
+      &pid_theta,
       diff_goal - (odom.right_total_count - odom.left_total_count)
     );
 
@@ -57,7 +43,7 @@ int main() {
 
     motor_a_set(voltage_A);
     motor_b_set(voltage_B);
-    delay_ms(pid_sum.Te);
+    delay_ms(pid_delta.conf->Te);
   }
 
   return 0;

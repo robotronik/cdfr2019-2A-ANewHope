@@ -8,3 +8,4 @@
 # Includes
 -DSTM32F3
 -Ihal_common/libopencm3/include
+-I.
