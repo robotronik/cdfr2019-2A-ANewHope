@@ -1,5 +1,4 @@
-#ifndef __DEBUG_H
-#define __DEBUG_H
+#pragma once
 
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/gpio.h>
@@ -30,5 +29,3 @@ void echo(char *chain);
 void echo_int(int integer);
 
 //rec=usart_recv_blocking(DEBUG_USART);//to receive a byte
-
-#endif

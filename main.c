@@ -2,8 +2,9 @@
 #include "lowlevel/clock.h"
 #include "lowlevel/debug.h"
 #include "lowlevel/motors.h"
-#include "odometry.h"
-#include "pid.h"
+
+#include "asservissement/odometry.h"
+#include "asservissement/pid.h"
 
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>

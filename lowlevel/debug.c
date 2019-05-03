@@ -2,7 +2,7 @@
 
 void debug_setup()
 {
-  //open GPIO for USART
+  // Open GPIO for USART
   rcc_periph_clock_enable(DEBUG_PORT_TX_RCC);
   gpio_mode_setup(DEBUG_PORT_TX, GPIO_MODE_AF, GPIO_PUPD_NONE, DEBUG_PIN_TX);
   gpio_set_af(DEBUG_PORT_TX, DEBUG_AF_TX, DEBUG_PIN_TX);
@@ -14,6 +14,7 @@ void debug_setup()
   rcc_periph_clock_enable(DEBUG_RCC_USART);
 
   usart_disable(DEBUG_USART);
+
   usart_set_baudrate(DEBUG_USART, DEBUG_UART_SPEED);
   usart_set_databits(DEBUG_USART, 8);
   usart_set_stopbits(DEBUG_USART, USART_STOPBITS_1);
