@@ -296,19 +296,6 @@ F 3 "~" H 4600 1050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+5V #PWR013
-U 1 1 5CD707B5
-P 4600 900
-AR Path="/5CD3A78B/5CD707B5" Ref="#PWR013"  Part="1" 
-AR Path="/5CD8A05D/5CD707B5" Ref="#PWR024"  Part="1" 
-F 0 "#PWR013" H 4600 750 50  0001 C CNN
-F 1 "+5V" H 4600 1050 50  0000 C CNN
-F 2 "" H 4600 900 50  0001 C CNN
-F 3 "" H 4600 900 50  0001 C CNN
-	1    4600 900 
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:GND #PWR014
 U 1 1 5CD70A5C
 P 4600 1500
@@ -567,19 +554,6 @@ $EndComp
 Connection ~ 3900 2300
 Wire Wire Line
 	3900 2300 3800 2300
-$Comp
-L power:+5V #PWR010
-U 1 1 5CD85B71
-P 3900 2000
-AR Path="/5CD3A78B/5CD85B71" Ref="#PWR010"  Part="1" 
-AR Path="/5CD8A05D/5CD85B71" Ref="#PWR021"  Part="1" 
-F 0 "#PWR010" H 3900 1850 50  0001 C CNN
-F 1 "+5V" H 3700 2050 50  0000 L CNN
-F 2 "" H 3900 2000 50  0001 C CNN
-F 3 "" H 3900 2000 50  0001 C CNN
-	1    3900 2000
-	1    0    0    -1  
-$EndComp
 Text Notes 7150 2400 0    50   ~ 0
 Résistances de Pull-Up déjà présentes dans le moteur
 $Comp
@@ -593,6 +567,28 @@ F 1 "L6235PD" H 5300 2850 60  0000 C CNN
 F 2 "" H 5300 2350 60  0001 C CNN
 F 3 "" H 5300 2350 60  0001 C CNN
 	1    5600 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5CD066F6
+P 3900 2000
+F 0 "#PWR?" H 3900 1850 50  0001 C CNN
+F 1 "+3V3" H 3750 2050 50  0000 C CNN
+F 2 "" H 3900 2000 50  0001 C CNN
+F 3 "" H 3900 2000 50  0001 C CNN
+	1    3900 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5CD07721
+P 4600 900
+F 0 "#PWR?" H 4600 750 50  0001 C CNN
+F 1 "+3V3" H 4600 1050 50  0000 C CNN
+F 2 "" H 4600 900 50  0001 C CNN
+F 3 "" H 4600 900 50  0001 C CNN
+	1    4600 900 
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
