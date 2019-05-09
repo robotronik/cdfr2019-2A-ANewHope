@@ -44,9 +44,9 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "tof.h"
 
 /* USER CODE BEGIN Includes */
+#include "tof.h"
 
 /* USER CODE END Includes */
 
@@ -71,6 +71,7 @@ void SystemClock_Config(void);
 ToF_Handler tof[NB_TOF];
 
 static int Init_ToF(ToF_Handler *htof, uint8_t i2c_addr);
+int threshold = 100;
 
 /* USER CODE END 0 */
 
@@ -108,7 +109,9 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim3);
 
   //==================================================//
   //            ToF Initialisation                    //
@@ -119,21 +122,15 @@ int main(void)
   //Init the time of flight sensors
   int r = Init_ToF(&tof[0], 0x54);
 
-  int init = -1;
-  int d = -1;
+  if(r != -1) {
+      HAL_GPIO_TogglePin(LED_Status_GPIO_Port, LED_Status_Pin);
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-    if(r != -1)
-      HAL_GPIO_TogglePin(LED_Status_GPIO_Port, LED_Status_Pin);
-    HAL_Delay(500);
-    init = ToF_Poll_Measurement_Data(&tof[0]);
-    d = ToF_Get_Last_Range(&tof[0]);
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -202,7 +199,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
 static int Init_ToF(ToF_Handler *htof, uint8_t i2c_addr){
   HAL_GPIO_WritePin(TOF_RESET_DATA_GPIO_Port, TOF_RESET_DATA_Pin, GPIO_PIN_SET);
 
@@ -244,6 +240,18 @@ static int Init_ToF(ToF_Handler *htof, uint8_t i2c_addr){
     return -1;
 
   return 0;
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+    if (htim->Instance == htim3.Instance) {
+        int init = ToF_Poll_Measurement_Data(&tof[0]);
+        int d = ToF_Get_Last_Range(&tof[0]);
+
+        //Clignotement de la LED en dessous du seuil
+        if (d < threshold && d != 0) {
+            HAL_GPIO_TogglePin(LED_Status_GPIO_Port, LED_Status_Pin);
+        }
+    }
 }
 /* USER CODE END 4 */
 
