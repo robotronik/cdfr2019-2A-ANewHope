@@ -1,0 +1,74 @@
+Configuration	ToToF
+STM32CubeMX 	4.27.0
+Date	02/07/2019
+MCU	STM32F303K8Tx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+CAN	Master	CAN_RX	PA11
+CAN	Master	CAN_TX	PA12
+I2C1	I2C	I2C1_SCL	PA15
+I2C1	I2C	I2C1_SDA	PB7
+RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PF0 / OSC_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PF1 / OSC_OUT
+SYS	Serial Wire	SYS_JTCK-SWCLK	PA14
+SYS	Serial Wire	SYS_JTMS-SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+TIM1	Internal Clock	TIM1_VS_ClockSourceINT	VP_TIM1_VS_ClockSourceINT
+TIM2	Internal Clock	TIM2_VS_ClockSourceINT	VP_TIM2_VS_ClockSourceINT
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PF0 / OSC_IN	RCC_OSC_IN	
+3	PF1 / OSC_OUT	RCC_OSC_OUT	
+6	PA0	GPIO_Output	US_TRIG_0
+7	PA1	GPIO_EXTI1	US_ECHO_0 [INT]
+8	PA2	GPIO_Output	US_TRIG_1
+9	PA3	GPIO_EXTI3	US_ECHO_1 [INT]
+10	PA4	GPIO_Output	US_TRIG_2
+11	PA5	GPIO_EXTI5	US_ECHO_2 [INT]
+12	PA6	GPIO_Output	US_TRIG_3
+13	PA7	GPIO_EXTI7	US_ECHO_3 [INT]
+14	PB0	GPIO_Output	US_OUTPUT_ENABLE
+18	PA8	GPIO_Output	LED_Status
+19	PA9	USART1_TX	USART1_TX_DEBUG
+20	PA10	USART1_RX	USART1_RX_DEBUG
+21	PA11	CAN_RX	
+22	PA12	CAN_TX	
+23	PA13	SYS_JTMS-SWDIO	
+24	PA14	SYS_JTCK-SWCLK	
+25	PA15	I2C1_SCL	I2C1_SCL_ToF
+27	PB4	GPIO_Output	TOF_RESET_DATA
+28	PB5	GPIO_Output	TOF_RESET_SHIFT
+30	PB7	I2C1_SDA	I2C1_SDA_ToF
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : ToToF
+Project Folder : /home/antonin/Documents/Robotronik/cdfr2019/Programmation/Test_ToF/ToToF
+Toolchain / IDE : Makefile
+Firmware Package Name and Version : STM32Cube FW_F3 V1.10.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : Yes
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : Yes
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
