@@ -57,7 +57,7 @@ CFlags += \
 	-mfpu=fpv4-sp-d16 \
 	-specs=nano.specs
 
-	# Use LibOpenCm3
+# Use LibOpenCm3
 LIBOPENCM3_DIR = $(Makefile_path)/hal_common/libopencm3
 CFlags += -I $(LIBOPENCM3_DIR)/include -DSTM32F3
 LFlags += -L $(LIBOPENCM3_DIR)/lib -lopencm3_stm32f3
@@ -98,7 +98,7 @@ tsmr.elf: \
 		asservissement/pid.c.o \
 		main.c.o \
 		|
-	$(CC) $(CFlags) $^ $(LFlags) -o $@
+	@$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
 
@@ -116,7 +116,7 @@ tests.elf: \
 		asservissement/pid.c.o \
 		main_tests.c.o \
 		|
-	$(CC) $(CFlags) $^ $(LFlags) -o $@
+	@$(CC) $(CFlags) $^ $(LFlags) -o $@
 	@echo LINK $@
 
 %.hex: %.elf
@@ -151,6 +151,8 @@ install_udev:
 %.debug: %.elf
 	$(GDB) $^ --command=gdb/attach.gdb
 
+
+.PHONY: clean
 clean:
 		find . \
 		\( -not -path  "./hal_common*" \) \

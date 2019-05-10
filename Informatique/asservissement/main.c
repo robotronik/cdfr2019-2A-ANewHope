@@ -7,7 +7,26 @@
 #include "asservissement/pid.h"
 #include "asservissement/calibration.h"
 
+void asservissement();
+
 int main() {
+  clock_setup();
+  gpio_setup();
+  // debug_setup();
+  // motors_setup();
+
+  // asservissement();
+
+  while (true) {
+    delay_ms(1000);
+    led_toggle_status();
+
+  };
+  return 0;
+}
+
+
+void asservissement() {
   float voltage_A=0,
         voltage_B=0,
         voltage_sum=0,
@@ -18,10 +37,7 @@ int main() {
   pid_init(&pid_delta, &PID_Configuration_delta);
   pid_init(&pid_theta, &PID_Configuration_theta);
 
-  clock_setup();
-  gpio_setup();
-  debug_setup();
-  motors_setup();
+
   odometry_setup();
   odometry odom;
   odometry_get_position();
@@ -45,6 +61,4 @@ int main() {
     motor_b_set(voltage_B);
     delay_ms(pid_delta.conf->Te);
   }
-
-  return 0;
 }
