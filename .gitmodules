@@ -1,3 +1,6 @@
-[submodule "Informatique/asservissement/hal_common/libopencm3"]
-	path = Informatique/asservissement/hal_common/libopencm3
-	url = https://github.com/libopencm3/libopencm3
+[submodule "Development"]
+	path = Development
+	url = https://github.com/robotronik/cdfr2019-2A-Development
+[submodule "Electronic"]
+	path = Electronic
+	url = https://github.com/robotronik/cdfr2019-2A-Electronic
